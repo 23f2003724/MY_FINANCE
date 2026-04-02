@@ -120,13 +120,15 @@ def index():
         day_total = to_money(row.total)
         day_saved = to_money(max(0.0, DAILY_LIMIT - day_total))
         day_extra = to_money(max(0.0, day_total - DAILY_LIMIT))
-        shopping_balance = to_money(shopping_balance + day_saved)
+        day_cart_change = to_money(DAILY_LIMIT - day_total)
+        shopping_balance = to_money(shopping_balance + day_cart_change)
         daily_rows.append(
             {
                 "date": row.date,
                 "total": day_total,
                 "saved": day_saved,
                 "extra": day_extra,
+                "cart_change": day_cart_change,
                 "is_over": day_total > DAILY_LIMIT,
             }
         )

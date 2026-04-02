@@ -44,7 +44,7 @@
                     {% if daily_total <= daily_limit %}
                         <div class="mini-note mt-3">Shopping cart add for this day: Rs. {{ '%.2f'|format(daily_limit - daily_total) }}</div>
                     {% else %}
-                        <div class="mini-note mt-3 text-danger">No cart add today because daily limit crossed.</div>
+                        <div class="mini-note mt-3 text-danger">Shopping cart minus for this day: Rs. {{ '%.2f'|format(daily_total - daily_limit) }}</div>
                     {% endif %}
                 </div>
             </div>

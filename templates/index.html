@@ -78,8 +78,10 @@
             <div class="glass-card metric-card card h-100">
                 <div class="card-body">
                     <div class="metric-label">Shopping Balance Cart</div>
-                    <div class="metric-value text-success">Rs. {{ '%.2f'|format(shopping_balance) }}</div>
-                    <small class="mini-note">Daily saved amount adds here automatically.</small>
+                    <div class="metric-value {% if shopping_balance < 0 %}text-danger{% else %}text-success{% endif %}">
+                        Rs. {{ '%.2f'|format(shopping_balance) }}
+                    </div>
+                    <small class="mini-note">Per-day cart change = `100 - spend` (can be negative).</small>
                 </div>
             </div>
         </div>
@@ -116,7 +118,9 @@
                                         <span class="soft-pill pill-success">Saved Rs. {{ '%.2f'|format(row['saved']) }}</span>
                                     {% endif %}
                                 </td>
-                                <td class="text-success fw-bold">Rs. {{ '%.2f'|format(row['saved']) }}</td>
+                                <td class="fw-bold {% if row['cart_change'] < 0 %}text-danger{% else %}text-success{% endif %}">
+                                    {% if row['cart_change'] >= 0 %}+{% endif %}Rs. {{ '%.2f'|format(row['cart_change']) }}
+                                </td>
                                 <td>
                                     <a class="btn btn-sm btn-soft px-3" href="{{ url_for('edit_day', expense_date=row['date']) }}">Edit Day</a>
                                 </td>
@@ -144,7 +148,9 @@
                                 {% else %}
                                     <div class="soft-pill pill-success mb-2">Saved Rs. {{ '%.2f'|format(row['saved']) }}</div>
                                 {% endif %}
-                                <div class="mini-note mb-2">Cart add: Rs. {{ '%.2f'|format(row['saved']) }}</div>
+                                <div class="mini-note mb-2 {% if row['cart_change'] < 0 %}text-danger{% else %}text-success{% endif %}">
+                                    Cart change: {% if row['cart_change'] >= 0 %}+{% endif %}Rs. {{ '%.2f'|format(row['cart_change']) }}
+                                </div>
                                 <a class="btn btn-soft btn-sm w-100" href="{{ url_for('edit_day', expense_date=row['date']) }}">Edit Day</a>
                             </div>
                         {% endfor %}
