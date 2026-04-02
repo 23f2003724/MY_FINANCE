@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Day</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="container py-4 shell">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3 fade-rise">
+        <div>
+            <h1 class="page-title h3 mb-1">Edit Day: {{ expense_date }}</h1>
+            <p class="subtitle mb-0">Manage this day like a mini board.</p>
+        </div>
+        <a class="btn btn-soft px-3 py-2" href="{{ url_for('index') }}">Back</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} border-0 rounded-4 shadow-sm fade-rise" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-5 fade-rise stagger-1">
+            <div class="glass-card card h-100">
+                <div class="card-body">
+                    <div class="metric-label">Daily Total</div>
+                    <div class="metric-value">Rs. {{ '%.2f'|format(daily_total) }}</div>
+                    <div class="mt-2">
+                        <span class="soft-pill {% if daily_status == 'Over budget' %}pill-danger{% else %}pill-success{% endif %}">
+                            {{ daily_status }}: Rs. {{ '%.2f'|format(daily_diff) }}
+                        </span>
+                    </div>
+                    {% if daily_total <= daily_limit %}
+                        <div class="mini-note mt-3">Shopping cart add for this day: Rs. {{ '%.2f'|format(daily_limit - daily_total) }}</div>
+                    {% else %}
+                        <div class="mini-note mt-3 text-danger">No cart add today because daily limit crossed.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-7 fade-rise stagger-2">
+            <div class="glass-card card h-100">
+                <div class="card-body">
+                    <h2 class="h6 page-title mb-3">Add New Expense To This Day</h2>
+                    <form method="post" class="row g-2">
+                        <input type="hidden" name="action" value="add">
+                        <div class="col-12 col-md-6">
+                            <input class="form-control" type="text" name="new_item" placeholder="Item name" required>
+                        </div>
+                        <div class="col-8 col-md-4">
+                            <input class="form-control" type="number" step="0.01" min="0" name="new_amount" placeholder="Amount" required>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <button class="btn btn-candy w-100" type="submit">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card card fade-rise stagger-3">
+        <div class="card-body">
+            <h2 class="h6 page-title mb-3">Update or Delete Entries</h2>
+            {% if expenses %}
+                {% for exp in expenses %}
+                    <form method="post" class="entry-block mb-2">
+                        <input type="hidden" name="expense_id" value="{{ exp['id'] }}">
+                        <div class="row g-2">
+                            <div class="col-12 col-md-5">
+                                <input class="form-control" type="text" name="item" value="{{ exp['item'] }}" required>
+                            </div>
+                            <div class="col-12 col-md-3">
+                                <input class="form-control" type="number" step="0.01" min="0" name="amount" value="{{ '%.2f'|format(exp['amount']) }}" required>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <button class="btn btn-mint w-100" type="submit" name="action" value="update">Update</button>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <button class="btn btn-danger-soft w-100" type="submit" name="action" value="delete" onclick="return confirm('Delete this expense?')">Delete</button>
+                            </div>
+                        </div>
+                    </form>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted mb-0">No expenses found for this day.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

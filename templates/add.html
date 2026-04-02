@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="container py-4 shell" style="max-width: 760px;">
+    <div class="d-flex justify-content-between align-items-center mb-3 fade-rise">
+        <div>
+            <h1 class="page-title h3 mb-1">Add Expense</h1>
+            <p class="subtitle mb-0">Drop a quick entry and keep your budget feed updated.</p>
+        </div>
+        <a class="btn btn-soft px-3 py-2" href="{{ url_for('index') }}">Back</a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} border-0 rounded-4 shadow-sm fade-rise">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="glass-card card fade-rise stagger-2">
+        <div class="card-body p-3 p-md-4">
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="date">Date</label>
+                    <input class="form-control" type="date" id="date" name="date" max="{{ today }}" value="{{ today }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="item">What did you buy?</label>
+                    <input class="form-control" type="text" id="item" name="item" placeholder="Coffee, snacks, cab, shopping..." required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label" for="amount">Amount (Rs.)</label>
+                    <input class="form-control" type="number" step="0.01" min="0" id="amount" name="amount" required>
+                </div>
+                <button class="btn btn-candy w-100 py-2" type="submit">Save Expense</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
