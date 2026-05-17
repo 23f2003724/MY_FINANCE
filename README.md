@@ -1,16 +1,29 @@
 # Pink Pocket Tracker
 
-Flask expense tracker with:
+A Flask expense tracker for monthly budgeting and daily spending control. The app lets a user record expenses, track daily limits, review recent spending, and see whether they are saving or going over budget.
 
-- Monthly budget: `Rs. 3000`
-- Daily limit: `Rs. 100`
-- Add expenses (`item + amount + date`)
-- Edit/delete past and current dates
-- Future dates blocked for add/edit
-- Daily saved/over-budget status
-- Shopping balance cart (sum of daily savings where spend is below Rs. 100)
+## Highlights
 
-## Local run
+- Add, edit, and delete expenses
+- Blocks future dates for add/edit actions
+- Tracks a monthly budget of `Rs. 3000`
+- Tracks a daily spending limit of `Rs. 100`
+- Shows daily saved or over-budget status
+- Calculates a shopping balance from days where spending stays below the limit
+- Uses SQLite locally and supports Postgres through `DATABASE_URL`
+- Includes a Render-ready `Procfile`
+
+## Tech Stack
+
+- Python
+- Flask
+- SQLAlchemy ORM
+- SQLite for local development
+- Postgres support for deployment
+- Bootstrap and custom CSS
+- Gunicorn
+
+## Local Setup
 
 ```bash
 python -m venv .venv
@@ -19,35 +32,34 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open: `http://127.0.0.1:5000`
+Open the app at `http://127.0.0.1:5000`.
 
-## Database
+## Environment Variables
 
-- Local default: SQLite (`database.db`)
-- Production recommended: Neon Postgres via `DATABASE_URL`
+The app works locally without environment variables. For deployment, set:
 
-The app auto-detects:
-- `sqlite:///database.db` fallback if no `DATABASE_URL` is provided
-- Postgres when `DATABASE_URL` is set
+```text
+SECRET_KEY=your-secret-key
+DATABASE_URL=your-postgres-connection-string
+```
 
-## Free deployment (Render + Neon)
+If `DATABASE_URL` is not provided, the app uses local SQLite at `database.db`.
 
-### 1. Create Neon database (free)
-1. Create a project in Neon.
-2. Copy the connection string from Neon dashboard.
-3. Keep `sslmode=require` in that URL.
+## Deployment Notes
 
-### 2. Deploy app on Render (free web service)
-1. Push this project to GitHub.
-2. In Render dashboard: `New` -> `Web Service`.
-3. Connect your GitHub repo.
-4. Use:
-   - Build command: `pip install -r requirements.txt`
-   - Start command: `gunicorn app:app`
-   - Plan: `Free`
-5. Add environment variables:
-   - `SECRET_KEY` = any strong random value
-   - `DATABASE_URL` = Neon connection string
-6. Deploy.
+This project can be deployed as a free web service on Render with Neon Postgres.
 
-After deploy, your data stays in Neon (not in Render filesystem), so it survives app restarts/redeploys.
+- Build command: `pip install -r requirements.txt`
+- Start command: `gunicorn app:app`
+- Required environment variables: `SECRET_KEY`, `DATABASE_URL`
+
+## What This Project Shows
+
+This project demonstrates beginner-friendly backend skills: Flask routing, SQLAlchemy models, server-side validation, database sessions, template rendering, deployment configuration, and clean local-vs-production database handling.
+
+## Next Improvements
+
+- Add user accounts and authentication
+- Add charts for weekly and monthly spending trends
+- Add automated tests for expense validation
+- Make monthly budget and daily limit configurable from the UI
